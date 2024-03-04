@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: clean-task
+spec:
+  steps:
+    - name: clean
+      image: alpine:latest
+      command: ["sh", "-c"]
+      args: ["echo 'Cleaning up...'"]
+   
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: test-task
+spec:
+  steps:
+    - name: checkout
+      image: alpine/git
+      command: ["git"]
+      args: ["clone", "https://github.com/your-repo.git", "/workspace/repo"]
+    - name: install-dependencies
+      image: node:14
+      command: ["npm"]
+      args: ["install"]
+      workingDir: /workspace/repo
+    - name: run-tests
+      image: node:14
+      command: ["npm"]
+      args: ["test"]
+      workingDir: /workspace/repo
+   
